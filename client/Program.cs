@@ -25,8 +25,8 @@ namespace client
 
             var greeting = new Greeting()
             {
-                FirstName = "Clement",
-                LastName = "Jean"
+                FirstName = "Petru",
+                LastName = "Ritivoiu"
             };
 
             var request = new GreetingRequest() { Greeting = greeting };
