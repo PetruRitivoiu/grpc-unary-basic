@@ -6,6 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ssl\ca.crt" />
+    <None Remove="ssl\server.crt" />
+    <None Remove="ssl\server.key" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ssl\ca.crt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ssl\server.crt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ssl\server.key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.3" />
     <PackageReference Include="Google.Protobuf.Tools" Version="3.11.3" />
     <PackageReference Include="Grpc" Version="2.27.0" />

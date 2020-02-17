@@ -1,43 +1,76 @@
 ﻿using Greet;
-using Grpc.Core;
+using Sqrt;
 using System;
-using System.Threading.Tasks;
 
 namespace client
 {
     class Program
     {
-        const string target = "127.0.0.1:5001";
+        const string target = "127.0.0.1:5001"; // for insecure channels
+        const string host = "localhost"; // for secure channels
+        const int port = 5001; // for secure channels
 
         static void Main(string[] args)
         {
-            var channel = new Channel(target, ChannelCredentials.Insecure);
+            string exit = "^C";
+            string input = string.Empty;
 
-            channel.ConnectAsync().ContinueWith(task =>
+            while (input != exit)
             {
-                if (task.Status == TaskStatus.RanToCompletion)
+                Console.WriteLine("Press 1 for Greeting");
+                Console.WriteLine("Press 2 for SQRT");
+                Console.WriteLine("Press ^C for exit");
+                input = Console.ReadLine();
+
+                if (input == "1")
                 {
-                    Console.WriteLine("Client connected successfully");
+                    handleGreeting();
                 }
-            });
+                if (input == "2")
+                {
+                    handleSqrt();
+                }
 
-            var client = new GreetingService.GreetingServiceClient(channel);
+                Console.WriteLine();
+            }
 
+            Console.WriteLine("Press any key ...");
+            Console.ReadKey();
+        }
+
+        public static void handleGreeting()
+        {
             var greeting = new Greeting()
             {
                 FirstName = "Petru",
                 LastName = "Ritivoiu"
             };
 
-            var request = new GreetingRequest() { Greeting = greeting };
-            var response = client.Greet(request);
+            var greetingRequest = new GreetingRequest() { Greeting = greeting };
 
-            Console.WriteLine(response.Result);
+            var greetingResponse = GreetRPC.Execute(host, port, greetingRequest).Result;
 
-            channel.ShutdownAsync().Wait();
+            Console.WriteLine($"Result: {greetingResponse.Result}");
+        }
 
-            Console.WriteLine("Press any key ...");
-            Console.ReadKey();
+        public static void handleSqrt()
+        {
+            Console.WriteLine("Type a number");
+            var numberStr = Console.ReadLine();
+            int.TryParse(numberStr, out var number);
+
+            var sqrtRequest = new SqrtRequest()
+            {
+                Number = number
+            };
+
+            var sqrtResponse = SqrtRPC.Execute(host, port, sqrtRequest).Result;
+
+            if (sqrtResponse != null)
+            {
+                Console.WriteLine($"Result: {sqrtResponse.SquareRoot}");
+            }
+
         }
     }
 }
